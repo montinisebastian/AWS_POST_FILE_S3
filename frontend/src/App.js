@@ -13,7 +13,7 @@ async function postImage({image, description}) {
 }
 
 
-function App() {
+function Upload() {
 
   const [file, setFile] = useState()
   const [description, setDescription] = useState("")
@@ -58,7 +58,7 @@ function App() {
       <form onSubmit={submit}>
         <input onChange={fileSelected} type="file" accept="image/*"></input>
         
-        <button type="submit">Cargar</button>
+        <Button type="submit">Cargar</Button>
         <Label>{texto}</Label>
       </form>
 
@@ -71,7 +71,8 @@ function App() {
       
 
     </div>
+    
   );
 }
 
-export default App;
+export default Upload;
