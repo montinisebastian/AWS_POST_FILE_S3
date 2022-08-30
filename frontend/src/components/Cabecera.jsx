@@ -3,7 +3,7 @@ import { Button } from 'primereact/button';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.css';
 import 'primeflex/primeflex.css'
-
+import Sello from '../imagenes/sellos.jpg'
 
 
 function Cabecera(){
@@ -26,8 +26,10 @@ function Cabecera(){
                     
                 </section>
             </div>
-            <div className="col-12 md:col-6 overflow-hidden">
-                <img src={require(`../imagenes/sellos.jpg`).default} alt="hero-1" className="md:ml-auto block md:h-full"   style={{ clipPath: 'polygon(8% 0, 100% 0%, 100% 100%, 0 100%)' }} />
+            <div className="col-12 md:col-6 overflow-hidden ">
+                
+                <img src={Sello}  className="md:ml-auto block md:h-full max-w-full" style={{ clipPath: 'polygon(8% 0, 100% 0%, 100% 100%, 0 100%)' }} />
+                
             </div>
         </div>
     )
