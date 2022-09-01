@@ -4,8 +4,8 @@ import { Button } from 'primereact/button';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.css';
 import 'primeflex/primeflex.css'
-import Sello from '../imagenes/sellos.jpg'
 
+import Sello from '../imagenes/sellos.jpg'
 
 function Cabecera(){
     
@@ -21,16 +21,18 @@ function Cabecera(){
         “prueba de existencia”, algo así como un sello digital
         que demuestra que el contenido de un mensaje existía
         antes de una fecha y hora determinada y no fue
-        modificado.</p>
+        modificado.
+        Se deberá adjuntar el Contrato en formato PDF, con la finalidad de reconocer palabras claves y complementarlas en los distintos campos del formulario.
+ </p>
         
                     <Button label="Comenzar" type="button" className="mr-3 p-button-raised"  />
                     
                 </section>
             </div>
+           
             <div className="col-12 md:col-6 overflow-hidden ">
                 
                 <img src={Sello}  className="md:ml-auto block md:h-full max-w-full" style={{ clipPath: 'polygon(8% 0, 100% 0%, 100% 100%, 0 100%)' }} />
-                
             </div>
 
             

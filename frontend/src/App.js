@@ -9,7 +9,9 @@ import { Divider } from 'primereact/divider';
 import { Dropdown } from 'primereact/dropdown';
 import { Fieldset } from 'primereact/fieldset';
 import { InputText } from 'primereact/inputtext';
+import { Dialog } from 'primereact/dialog';
 import CalcularHASH256_2 from "./components/CalcularHASH256_2";
+import 'primeicons/primeicons.css';
 async function postImage({image, description}) {
   const formData = new FormData();
   formData.append("image", image)
@@ -28,6 +30,7 @@ function Upload() {
   const [fileName, setFileName] = useState()
   const [texto, setTexto] = useState("")
   const [dnis, setDNIS] = useState([])
+  const [denominaciones, setDenominaciones] = useState([])
 
   const [datos,setDatos] = useState({
     nombre : '',
@@ -170,8 +173,15 @@ const [tiempoLenguajeNatural,setTiempoLenguajeNatural] = useState({
     
     
     
-}
-
+  }
+  const renderFooter = (name) => {
+    return (
+        <div>
+            
+            <Button label="Continuar" icon="pi pi-check" onClick={() => onHide(name)} autoFocus />
+        </div>
+    );
+   }
 
 
 
@@ -200,7 +210,7 @@ const [tiempoLenguajeNatural,setTiempoLenguajeNatural] = useState({
     console.log("OCRBody",OCRBody);
     setTexto(OCRBody.body[1]);
     setDNIS(OCRBody.body[2].split(','));
-    
+    setDenominaciones(OCRBody.body[3].split(','));
     
   }
 
@@ -216,9 +226,41 @@ const [tiempoLenguajeNatural,setTiempoLenguajeNatural] = useState({
     const onUpload = () => {
         toast.current.show({severity: 'info', summary: 'Success', detail: 'File Uploaded'});
     }
+    const [displayResponsive, setDisplayResponsive] = useState(false);
+    const [displayDialogoResultadosIntervinientes, setDisplayDialogoResultadosIntervinientes] = useState(false);
+    const [displayDialogoResultadosLugaresDestacados, setDisplayDialogoResultadosLugaresDestacados] = useState(false);
+    const [displayDialogoResultadosImpuesto, setDisplayDialogoResultadosImpuesto] = useState(false);
+    const dialogFuncMap = {
+   
+      'displayResponsive': setDisplayResponsive,
+      'displayDialogoResultadosIntervinientes' : setDisplayDialogoResultadosIntervinientes,
+      'displayDialogoResultadosLugaresDestacados' : setDisplayDialogoResultadosLugaresDestacados,
+      'displayDialogoResultadosImpuesto' : setDisplayDialogoResultadosImpuesto
+    }
   
-  
+  const onClick = (name, position) => {
+      dialogFuncMap[`${name}`](true);
 
+      if (position) {
+          setPosition(position);
+      }
+  }  
+  function mostrarDialogoResultadosIntervinientes() {
+      onClick('displayDialogoResultadosIntervinientes');
+  }
+  function mostrarDialogoResultadosLugaresDestacados() {
+      onClick('displayDialogoResultadosLugaresDestacados');
+  }
+  function mostrarDialogoResultadosImpuesto(){
+      onClick('displayDialogoResultadosImpuesto')
+  }
+  const [position, setPosition] = useState('center');
+  const onHide = (name) => {
+    dialogFuncMap[`${name}`](false);
+  }
+  
+  
+  
   return (
     <div class="md:p-6 align-items-center ">
       <Divider align="center">
@@ -227,6 +269,7 @@ const [tiempoLenguajeNatural,setTiempoLenguajeNatural] = useState({
           <b>Cargar Contrato</b>
           </div>
       </Divider>
+      <Divider align="center">
       <div  class="md:p-6 align-items-center "  >
             <input onChange={fileSelected} type="file" accept="image/*"></input>
                 <div className="card">
@@ -235,9 +278,10 @@ const [tiempoLenguajeNatural,setTiempoLenguajeNatural] = useState({
                         
                 </div>
               <Button  type="button" className="mr-3 p-button-raised" onClick={CargarPDF}>Cargar</Button>
-            <Label>{dnis}</Label>
+            <Label>Listado de DNIS:{dnis}</Label>
+            <Label>Listado de denominaciones:{denominaciones}</Label>
         </div>  
-       
+        </Divider>
       
 
 
@@ -252,12 +296,7 @@ const [tiempoLenguajeNatural,setTiempoLenguajeNatural] = useState({
 
       </div>
 
-      <Divider align="center">
-                    <div className="inline-flex align-items-center">
-                        <i className="pi pi-map-marker mr-2"></i>
-                        <b>Lugares Declarados</b>
-                    </div>
-      </Divider>
+      
 
       <div  class="md:p-6 align-items-center "  >
             <Fieldset legend="Primer Interviniente">
@@ -299,7 +338,82 @@ const [tiempoLenguajeNatural,setTiempoLenguajeNatural] = useState({
             </div>
             
             </Fieldset>
+        </div>
+
+
+        <div  class="md:p-6 align-items-center "  >
+            <Fieldset legend="Segundo Interviniente">
+            <div class="p-fluid grid">   
+            
+            <div class="field col-12 md:col-4">
+            <label htmlFor="TipoDocumento" className="block">Tipo de Documento</label> 
+            
+                <Dropdown tooltip={hashes.hash} name="tipoDni2" value={partesInterviniente.tipoDni2} options={tipoDNIs} onChange={handleInputChange}  placeholder="Seleccione Tipo Documento" />
+
             </div>
+
+            <div class="field col-12 md:col-4">   
+            
+                    <label htmlFor="SuperficieTerrenoCatrastro" className="block">Numero de Documento</label>
+                    <Dropdown tooltip={hashes.hash} id="NumeroDocumento2" name="numeroDni2" value={partesInterviniente.numeroDni2}   options={dnis} onChange={handleInputChange} placeholder="Ingrese Numero de Documento"/>
+                   
+                
+            </div>
+            <div class="field col-12 md:col-4">
+            <label htmlFor="DomicilioReal" className="block">Sexo</label> 
+            
+                <Dropdown tooltip={hashes.hash} name="sexo2" value={partesInterviniente.sexo2} options={sexo} onChange={handleInputChange} placeholder="Seleccione Sexo" />
+
+            </div>
+            <div class="field col-12 md:col-4">   
+            
+                    <label htmlFor="SuperficieTerrenoCatrastro" className="block">Nombre Completo</label>
+                    <InputText tooltip={hashes.hash} id="NombreCompleto2" name="nombreCompleto2"  onChange={handleInputChange} placeholder="Ingrese Nombre Completo"/>
+                   
+                
+            </div>
+            <div class="field col-12 md:col-4">
+            <label htmlFor="Roles" className="block">Rol</label> 
+            
+                <Dropdown tooltip={hashes.hash} name="rol2" value={partesInterviniente.rol2} options={roles} onChange={handleInputChange}   placeholder="Seleccione Rol"/>
+
+            </div>
+            <div class="field col-12 md:col-4 pt-5" >
+                
+                <Button icon="pi pi-plus" label="Cargar Datos" type="button" className="tipoPersona" onClick={() => mostrarDialogoResultadosIntervinientes()} />
+                
+                <Dialog header="Carga de Partes Intervinientes con Exito" visible={displayDialogoResultadosIntervinientes} onHide={() => onHide('displayDialogoResultadosIntervinientes')} breakpoints={{'960px': '75vw'}} style={{width: '50vw'}} footer={renderFooter('displayDialogoResultadosIntervinientes')}>
+                        <h3>Primer Interviniente</h3>
+                        <p><b>Tipo Documento: </b>  {partesInterviniente.tipoDni1}</p>
+                        <p><b>Número: </b>          {partesInterviniente.numeroDni1}</p>
+                        <p><b>Nombre Completo: </b> {partesInterviniente.nombreCompleto1}</p>
+                        <p><b>Sexo:             </b>{partesInterviniente.sexo1}</p>
+                        <p><b>Rol: </b>             {partesInterviniente.rol1}</p>
+                        <p>------------------------------------------------------------------------------</p>
+                        <h3>Segundo Interviniente</h3>
+                        <p><b>Tipo Documento: </b>  {partesInterviniente.tipoDni2}</p>
+                        <p><b>Número: </b>          {partesInterviniente.numeroDni2}</p>
+                        <p><b>Nombre Completo: </b> {partesInterviniente.nombreCompleto2}</p>
+                        <p><b>Sexo: </b>            {partesInterviniente.sexo2}</p>
+                        <p><b>Rol: </b>             {partesInterviniente.rol2}</p>
+                </Dialog>
+            </div>
+            
+            </div>
+            
+            </Fieldset>
+            </div>
+
+
+
+
+
+      <Divider align="center">
+            <div className="inline-flex align-items-center">
+                <i className="pi pi-map-marker mr-2"></i>
+                <b>Lugares Declarados</b>
+            </div>
+      </Divider>    
 
       { images.map( image => (
         <div key={image}>
